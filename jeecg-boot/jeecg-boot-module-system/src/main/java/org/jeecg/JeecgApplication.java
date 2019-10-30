@@ -1,24 +1,23 @@
 package org.jeecg;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
-
-import lombok.extern.slf4j.Slf4j;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 @Slf4j
 @EnableSwagger2
 @SpringBootApplication
+@EnableAutoConfiguration
 public class JeecgApplication {
 
   public static void main(String[] args) throws UnknownHostException {
-    //System.setProperty("spring.devtools.restart.enabled", "true");
-
     ConfigurableApplicationContext application = SpringApplication.run(JeecgApplication.class, args);
     Environment env = application.getEnvironment();
     String ip = InetAddress.getLocalHost().getHostAddress();
@@ -33,5 +32,4 @@ public class JeecgApplication {
         "----------------------------------------------------------");
 
   }
-  
 }

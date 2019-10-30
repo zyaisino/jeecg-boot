@@ -3,12 +3,13 @@
 
     <!-- 查询区域 -->
     <div class="table-page-search-wrapper">
-      <a-form layout="inline">
+      <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
 
           <a-col :md="6" :sm="12">
             <a-form-item label="账号">
-              <a-input placeholder="请输入账号查询" v-model="queryParam.username"></a-input>
+              <!--<a-input placeholder="请输入账号查询" v-model="queryParam.username"></a-input>-->
+              <j-input placeholder="输入账号模糊查询" v-model="queryParam.username"></j-input>
             </a-form-item>
           </a-col>
 
@@ -140,13 +141,13 @@
               </a-menu-item>
 
               <a-menu-item v-if="record.status==1">
-                <a-popconfirm title="确定冻结吗?" @confirm="() => handleFrozen(record.id,2)">
+                <a-popconfirm title="确定冻结吗?" @confirm="() => handleFrozen(record.id,2,record.username)">
                   <a>冻结</a>
                 </a-popconfirm>
               </a-menu-item>
 
               <a-menu-item v-if="record.status==2">
-                <a-popconfirm title="确定解冻吗?" @confirm="() => handleFrozen(record.id,1)">
+                <a-popconfirm title="确定解冻吗?" @confirm="() => handleFrozen(record.id,1,record.username)">
                   <a>解冻</a>
                 </a-popconfirm>
               </a-menu-item>
@@ -179,6 +180,7 @@
   import {frozenBatch} from '@/api/api'
   import {JeecgListMixin} from '@/mixins/JeecgListMixin'
   import SysUserAgentModal from "./modules/SysUserAgentModal";
+  import JInput from '@/components/jeecg/JInput'
 
   export default {
     name: "UserList",
@@ -186,7 +188,8 @@
     components: {
       SysUserAgentModal,
       UserModal,
-      PasswordModal
+      PasswordModal,
+      JInput
     },
     data() {
       return {
@@ -297,6 +300,16 @@
         } else {
           let ids = "";
           let that = this;
+          let isAdmin = false;
+          that.selectionRows.forEach(function (row) {
+            if (row.username == 'admin') {
+              isAdmin = true;
+            }
+          });
+          if (isAdmin) {
+            that.$message.warning('管理员账号不允许此操作,请重新选择！');
+            return;
+          }
           that.selectedRowKeys.forEach(function (val) {
             ids += val + ",";
           });
@@ -326,8 +339,13 @@
           this.batchFrozen(1);
         }
       },
-      handleFrozen: function (id, status) {
+      handleFrozen: function (id, status, username) {
         let that = this;
+        //TODO 后台校验管理员角色
+        if ('admin' == username) {
+          that.$message.warning('管理员账号不允许此操作！');
+          return;
+        }
         frozenBatch({ids: id, status: status}).then((res) => {
           if (res.success) {
             that.$message.success(res.message);

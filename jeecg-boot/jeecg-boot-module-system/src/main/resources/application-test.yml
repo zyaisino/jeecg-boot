@@ -1,5 +1,7 @@
 server:
     port: 8080
+    tomcat: 
+        max-swallow-size: -1
     servlet:
        context-path: /jeecg-boot
        compression:
@@ -64,6 +66,7 @@ spring:
         enabled: true
         loginUsername: admin
         loginPassword: 123456
+        allow:
       web-stat-filter:
         enabled: true
     dynamic: 
@@ -126,9 +129,9 @@ mybatis-plus:
       id-type: 4
       # 默认数据库表下划线命名
       table-underline: true
-   #configuration:
+   configuration:
     # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
-    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 #jeecg专用配置
 jeecg :
   path :
@@ -136,6 +139,41 @@ jeecg :
     upload: D://upFiles
     #webapp文件路径
     webapp: D://webapp
-logging:
-  level:
-    org.jeecg.modules.system.mapper : debug
+  #短信秘钥
+  sms:
+     accessKeyId: ??
+     accessKeySecret: ??
+  shiro:
+     excludeUrls: /test/jeecgDemo/demo3,/test/jeecgDemo/redisDemo/**
+  #阿里云oss存储配置
+  oss:
+    type: aliyun
+    endpoint: oss-cn-beijing.aliyuncs.com
+    accessKey: ???
+    secretKey: ???
+    bucketName: ???
+    properties:
+      aliyun:
+        protocol: https
+  # ElasticSearch 设置
+  elasticsearch:
+    cluster-name: my-application
+    cluster-nodes: 127.0.0.1:9200
+#  #腾讯云cos存储配置
+#  oss:
+#    type: qc
+#    #跟地区有关
+#    endpoint: cos.ap-beijing.myqcloud.com
+#    accessKey: yourSecretKeyId
+#    secretKey: yourSecretKey
+#    bucketName: yourBucketName
+#    properties:
+#      qc:
+#        #地区
+#        region: ap-beijing
+#        #存储路径
+#        prefix: project
+
+#cas单点登录
+cas:
+  prefixUrl: http://cas.example.org:8443/cas

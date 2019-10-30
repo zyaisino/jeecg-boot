@@ -125,7 +125,10 @@ function  generateChildRouters (data) {
         icon: item.meta.icon,
         url:item.meta.url ,
         permissionList:item.meta.permissionList,
-        keepAlive:item.meta.keepAlive
+        keepAlive:item.meta.keepAlive,
+        /*update_begin author:wuxianquan date:20190908 for:赋值 */
+        internalOrExternal:item.meta.internalOrExternal
+        /*update_end author:wuxianquan date:20190908 for:赋值 */
       }
     }
     if(item.alwaysShow){
@@ -232,4 +235,23 @@ export function showDealBtn(bpmStatus){
     return true;
   }
   return false;
+}
+
+/**
+ * 增强CSS，可以在页面上输出全局css
+ * @param css 要增强的css
+ * @param id style标签的id，可以用来清除旧样式
+ */
+export function cssExpand(css, id) {
+  let style = document.createElement('style')
+  style.type = "text/css"
+  style.innerHTML = `@charset "UTF-8"; ${css}`
+  // 清除旧样式
+  if (id) {
+    let $style = document.getElementById(id)
+    if ($style != null) $style.outerHTML = ''
+    style.id = id
+  }
+  // 应用新样式
+  document.head.appendChild(style)
 }

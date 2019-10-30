@@ -84,15 +84,12 @@
     },
     watch: {
       value(newValue) {
-        this.myValue = newValue
+        this.myValue = (newValue == null ? '' : newValue)
       },
       myValue(newValue) {
-        console.log(newValue)
         if(this.triggerChange){
-          console.log(1)
           this.$emit('change', newValue)
         }else{
-          console.log(2)
           this.$emit('input', newValue)
         }
       }
